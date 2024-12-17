@@ -2,6 +2,8 @@ import express from "express"
 import morgan from "morgan";
 import userRoutes from './routers/users.js'
 import coursesRoutes from './routers/courses.js'
+import 'dotenv/config'
+import mongoose from "mongoose";
 
 const tasks = [
     {
@@ -33,11 +35,13 @@ function middleware(req, res, next) {
 }
 
 app.use(express.json())
-
 app.use(middleware)
 app.use('/user', userRoutes)
 app.use('/courses', coursesRoutes)
 
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log("Mongo DB Connected"))
+    .catch((error) => console.log(error))
 // app.get('/', (req, res) => {
 //     console.log("req.requestBy", req.requestBy)
 //     res.status(200).send(tasks);
